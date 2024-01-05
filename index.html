@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + TS</title>
+  </head>
+  <body>
+    <div class="container" id="app">
+      <div class="main-col">
+        <div class="svg-container">
+          <svg class="map" id="map" viewbox="0 30 1000 550"></svg>
+        </div>
+        <div class="settings">
+          <label for="radiusControls">
+            Radius: <input id="radiusControlls" type="range" min="10" max="100" value="10" step="1" />
+          </label>
+        </div>
+      </div>
+      <div class="secondary-col">
+        <div class="stickycounter" id="stickyCounter"></div>
+        <div class="datatable" id="tableData">
+
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
