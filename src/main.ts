@@ -1,7 +1,6 @@
 import './style.css'
 import * as d3 from 'd3';
 import * as topojson from 'topojson'
-import plotly from 'plotly.js-dist-min';
 
 type SvgInHtml = HTMLElement & SVGElement;
 var svg = d3.select("svg");
@@ -22,7 +21,6 @@ import DefaultMap from './helpers/DefaultMap';
 import CircleController from './domain/CirlceController';
 import SelectionController from './domain/SelectionController';
 import RouteController from './domain/RouteController';
-import { debounce } from './helpers/debounce';
 import { throttle } from './helpers/throttle';
 import { buffer } from './helpers/buffer';
 
@@ -161,14 +159,6 @@ const updateRoute = (paths: any[][]) => {
   }
   const countiesData = paths[0].map(item => data[item])
   pathDisplay.innerHTML = countiesData.map(c => c.name).join(" -> ");
-
-	// plotly.newPlot( pathGraph, [{
-
-  //   x: countiesData.map(c => c.name),
-
-  //   y: countiesData.map(c => c.population) }], {
-
-	// margin: { t: 0 } } );
 }
 
 const radiusControllsElement: HTMLInputElement = document.querySelector('#radiusControlls')!
