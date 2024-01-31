@@ -1,94 +1,92 @@
 @font-face {
-  font-family: 'zombie';
-  src: url('/public/Futurot.woff');
+	font-family: 'zombie';
+	src: url('/public/Futurot.woff');
 }
 
 body {
-  font-family: zombie;
-  margin: 0;
-  background-image: url("/public/background.webp");
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: auto 100%;
-  background-position: right;
+	font-family: zombie;
+	margin: 0;
+	background-image: url("/public/background.webp");
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: auto 100%;
+	background-position: right;
 }
 
 #map {
-  width: auto;
-  height: 600px;
+	width: auto;
+	height: 600px;
 }
 
 .counties {
-  fill: darkblue;
-  stroke: white;
-  stroke-width: 0.05px;
+	fill: darkblue;
+	stroke: white;
+	stroke-width: 0.05px;
 }
 
 .container {
-  display: flex;
-  max-width:100vw;
+	display: flex;
+	max-width: 100vw;
 }
 
 .main-col {
-  display: flex;
-  flex-direction: column;
-  max-width: 66vw;
-  flex: 1 1 100%;
-  padding: 1rem 0 1rem 1rem;
+	display: flex;
+	flex-direction: column;
+	max-width: 66vw;
+	flex: 1 1 100%;
+	padding: 1rem 0 1rem 1rem;
 }
 
 .secondary-col {
-  color: #3e0a15;
-  flex: 0 0 400px;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  max-height: calc(100vh - 4rem);
-  position: sticky;
-  top: 0;
+	color: #3e0a15;
+	flex: 0 0 400px;
+	padding: 1rem;
+	display: flex;
+	flex-direction: column;
+	max-height: calc(100vh - 4rem);
+	position: sticky;
+	top: 0;
 }
 
 .datatable {
-  max-height: 100%;
-  overflow-y: scroll;
+	max-height: 100%;
+	overflow-y: scroll;
 }
 
 .datatable div {
-  cursor: pointer
+	cursor: pointer
 }
 
 .stickycounter {
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 1px 0px;
-  display: flex;
-  align-items: center;
+	box-shadow: rgba(149, 157, 165, 0.2) 0px 1px 0px;
+	display: flex;
+	align-items: center;
 }
 
 .svg-container {
-  max-height: 600px;
-  overflow: scroll;
+	max-height: 600px;
+	overflow: scroll;
 }
 
 .secondary-col-content {
-  max-height: 100%;
-  display: flex;
-  gap: 1rem;
-  flex-direction: column;
-  padding: 1rem;
-  background: #91aa82bb;
+	max-height: 100%;
+	display: flex;
+	gap: 1rem;
+	flex-direction: column;
+	padding: 1rem;
+	background: #91aa82bb;
 }
 
 .settings label {
-  display: flex;
-  flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }
 
 .main-col-upper {
-  max-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+	max-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
-.path-display {
-
-}
+.path-display {}
