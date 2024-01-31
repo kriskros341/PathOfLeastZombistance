@@ -1,5 +1,5 @@
 const config = {
-    base: "/pathofleastzombiestance/",
+    base: "/PathOfLeastZombistance/",
 }
 
 export default config;
