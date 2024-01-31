@@ -9,8 +9,8 @@ const dataTable = document.getElementById("tableData")!;
 const stickyCounter = document.getElementById("stickyCounter")!;
 var path = d3.geoPath();
 
-const dataJSON = fetch('/data.json').then(response => response.json());
-const adjecencyJSON = fetch('/adjecencyData.json').then(response => response.json());
+const dataJSON = fetch('/PathOfLeastZombiestance/data.json').then(response => response.json());
+const adjecencyJSON = fetch('/PathOfLeastZombiestance/adjecencyData.json').then(response => response.json());
 
 import PriorityQueue from './helpers/PriorityQueue';
 import DefaultMap from './helpers/DefaultMap';
@@ -271,7 +271,7 @@ const sum = (arr: number[]) => {
 }
 
 function init() {
-	d3.json("topo.json").then((us) => {
+	d3.json("PathOfLeastZombiestance/topo.json").then((us) => {
 		// @ts-ignore
 		features = topojson.feature(us, us.objects.counties).features.filter(d => data[d.id] && data[d.id].state !== 'Alaska' && data[d.id].state !== 'Hawaii')
 
