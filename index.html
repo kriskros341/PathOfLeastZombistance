@@ -9,19 +9,26 @@
   <body>
     <div class="container" id="app">
       <div class="main-col">
-        <div class="svg-container">
-          <svg class="map" id="map" viewbox="0 30 1000 550"></svg>
+        <div class="main-col-upper">
+          <div class="svg-container">
+            <svg class="map" id="map" viewbox="0 30 1000 550"></svg>
+          </div>
+          <div class="path-display" id="pathDisplay"></div>
         </div>
-        <div class="settings">
-          <label for="radiusControls">
-            Radius: <input id="radiusControlls" type="range" min="10" max="100" value="10" step="1" />
-          </label>
+        <div id="pathGraph">
+  
         </div>
       </div>
       <div class="secondary-col">
-        <div class="stickycounter" id="stickyCounter"></div>
-        <div class="datatable" id="tableData">
-
+        <div class="secondary-col-content">
+          <div class="settings">
+            <label for="radiusControls">
+              <span id="radiusLabel">Radius:</span> <input id="radiusControlls" type="range" min="10" max="100" value="10" step="any" />
+            </label>
+          </div>
+          <div class="stickycounter" id="stickyCounter"></div>
+          <div class="datatable" id="tableData">
+        </div>
         </div>
       </div>
     </div>

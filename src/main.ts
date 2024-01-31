@@ -1,6 +1,8 @@
 import './style.css'
 import * as d3 from 'd3';
 import * as topojson from 'topojson'
+import plotly from 'plotly.js-dist-min';
+
 type SvgInHtml = HTMLElement & SVGElement;
 var svg = d3.select("svg");
 const svgElement: SvgInHtml = document.getElementById('map') as SvgInHtml;
@@ -14,12 +16,15 @@ import adjecencyJSON from './adjecencyData.json';
 const data: Record<string, any> = dataJSON;
 const adjecency: Record<string, any> = adjecencyJSON;
 
-import PriorityQueue from './utilityClasses/PriorityQueue';
-import DefaultMap from './utilityClasses/DefaultMap';
+import PriorityQueue from './helpers/PriorityQueue';
+import DefaultMap from './helpers/DefaultMap';
 
 import CircleController from './domain/CirlceController';
 import SelectionController from './domain/SelectionController';
 import RouteController from './domain/RouteController';
+import { debounce } from './helpers/debounce';
+import { throttle } from './helpers/throttle';
+import { buffer } from './helpers/buffer';
 
 let features: any[] = []
 let avgs: Record<string, any> = {}
@@ -119,10 +124,18 @@ const bfs = (selectedCountyId: string, countyId: string) => {
   return results;
 }
 
+const pathDisplay = document.getElementById("pathDisplay")!
+const pathGraph = document.getElementById("pathGraph")!
+
 const routeController = new RouteController().setStrategy(bfs)
 
 const updateRoute = (paths: any[][]) => {
   svg.selectAll('[data-test="line"]').remove()
+  if (!paths.length) {
+    pathDisplay.innerHTML = "";
+    pathGraph.innerHTML = "";
+    return;
+  }
   for (let path of paths) {
     const coords = path.map((countyId) => avgs[countyId])
     const slidingCoords = [...toSliding2(coords)]
@@ -146,6 +159,16 @@ const updateRoute = (paths: any[][]) => {
         .attr("stroke", "red")
         .attr("stroke-width", "4")
   }
+  const countiesData = paths[0].map(item => data[item])
+  pathDisplay.innerHTML = countiesData.map(c => c.name).join(" -> ");
+
+	// plotly.newPlot( pathGraph, [{
+
+  //   x: countiesData.map(c => c.name),
+
+  //   y: countiesData.map(c => c.population) }], {
+
+	// margin: { t: 0 } } );
 }
 
 const radiusControllsElement: HTMLInputElement = document.querySelector('#radiusControlls')!
@@ -173,7 +196,7 @@ const updateSelection = (state: {selection: any[]}) => {
     }
     dataTable.appendChild(div)
   }
-
+  dataTable.scrollTo({ top: 0 })
   stickyCounter.innerHTML = `Count: ${dataObjects.length}`
 }
 const updateCircle = () => {
@@ -189,12 +212,26 @@ const updateCircle = () => {
     .attr('stroke-width', '3px')
 }
 
-radiusControllsElement.addEventListener('input', () => {
-  circle.update({ r: parseInt(radiusControllsElement.value) });
+const radiusLabel = document.getElementById('radiusLabel')!;
+
+const updateRadiusLabel = (radiusValue: number) => {
+  const maxRadius = 450;
+  const minRadius = 90 - 10;
+  const portion = radiusValue / 100;
+  
+  
+  const kms = minRadius + portion * (maxRadius - minRadius);
+  radiusLabel.innerHTML = `Radius: ${kms.toFixed(2)}km`
+}
+
+radiusControllsElement.addEventListener('input', buffer(() => {
+  const radiusValue = parseInt(radiusControllsElement.value)
+  circle.update({ r: radiusValue });
   updateCircle();
+  updateRadiusLabel(radiusValue)
   selectionController.update({ selection: selectionController.execute(circle.state) });
   updateSelection(selectionController.state);
-});
+}, 200));
 
 let maxPopulation = 0;
 for (let stateData of Object.values(data)) {
@@ -205,8 +242,13 @@ for (let stateData of Object.values(data)) {
 maxPopulation = Math.log(maxPopulation)
 
 const getFillColor = (id: string) => {
-  const hue = (0 + 300 * Math.log(parseInt(data[id].population) ?? 1)) / maxPopulation;
-  return `hsla(${hue}, 100%, 50%, 1)`
+  const maxHsl = 120;
+  const minHsl = 0;
+  const currentPopulation = maxPopulation - (Math.log(parseInt(data[id].population) ?? 1) / maxPopulation);
+
+  const lerped = minHsl + (currentPopulation * maxHsl - minHsl);
+
+  return `hsla(${lerped}, 100%, 50%, 1)`;
 }
 
 const screenToSVG = (screenX: number, screenY: number) => {
@@ -220,7 +262,7 @@ const screenToSVG = (screenX: number, screenY: number) => {
 
 function* toSliding2(array: any[]) {
   if (array.length <= 1) {
-    throw "jdjd"
+    throw "at least two entries"
   }
   for (let i = 0; i < array.length - 1; i++) {
     yield [array[i], array[i+1]]
@@ -279,9 +321,34 @@ d3.json("topo.json").then((us) => {
           updateCircle();
           selectionController.update({ selection: selectionController.execute(circle.state) });
           updateSelection(selectionController.state);
-
+          updateRoute([])
           for (let countyId of selectionController?.state.selection ?? []) {
             d3.select(`#id_${countyId}`).style("fill", getFillColor(countyId));
           }
         })
+        .on("contextmenu", (event, props) => {
+          event.preventDefault()
+          const paths = routeController.execute(selectedCountyId, props.id)
+          routeController.update({ from: selectedCountyId, to: props.id, paths })
+          updateRoute(paths);
+        });
+
+  const zoom = d3.zoom()
+    .scaleExtent([1, 8])
+    .translateExtent([[-100, -100], [1000 + 90, 800 + 100]])
+    .filter(filter)
+    .on("zoom", throttle(zoomed, 80));
+  //@ts-ignore
+  return Object.assign(svg.call(zoom).node(), {reset});
+  
+    
 })
+
+function filter(event: any) {
+  event.preventDefault();
+  return (!event.ctrlKey || event.type === 'wheel') && !event.button;
+}
+
+function zoomed({ transform }: { transform: any }) {
+  svg.attr("transform", transform);
+}
